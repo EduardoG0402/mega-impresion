@@ -9,8 +9,31 @@
   },
   "build": {
     "appId": "com.mega.impresion",
-    "files": ["src/**/*", "db.js", ".env", "node_modules/**/*"],
-    "win": { "target": "nsis" },
-    "publish": [{ "provider": "github", "owner": "EduardoG0402", "repo": "mega-impresion" }]
+    "files": [
+      "src/**/*",
+      "db.js",
+      ".env",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "EduardoG0402",
+        "repo": "mega-impresion"
+      }
+    ]
+  },
+  "dependencies": {
+    "dotenv": "^18.0.8",
+    "electron-updater": "^6.8.9",
+    "getmac": "^6.6.0",
+    "mssql": "^12.7.10"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.15.3"
   }
 }
