@@ -1,0 +1,16 @@
+{
+  "name": "mega-impresion",
+  "version": "1.0.0",
+  "description": "Módulo de Impresión - MEGA",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.mega.impresion",
+    "files": ["src/**/*", "db.js", ".env", "node_modules/**/*"],
+    "win": { "target": "nsis" },
+    "publish": [{ "provider": "github", "owner": "EduardoG0402", "repo": "mega-impresion" }]
+  }
+}

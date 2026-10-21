@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MEGA | Impresión</title>
+    <style>
+        body { font-family: sans-serif; background: #f1f5f9; padding: 20px; }
+        .header { background: #1e293b; color: white; padding: 20px; border-radius: 8px; display: flex; justify-content: space-between; }
+        table { width: 100%; margin-top: 20px; background: white; border-collapse: collapse; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        th, td { padding: 15px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        button { background: #10b981; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>🖨️ Gestor de Impresión</h2>
+        <div id="nombre-sucursal" style="background:#3b82f6; padding: 5px 15px; border-radius: 20px; align-content: center;">Cargando...</div>
+    </div>
+    <table>
+        <thead><tr><th>Folio</th><th>Placa</th><th>Vehículo</th><th>Acción</th></tr></thead>
+        <tbody id="cola-impresion"></tbody>
+    </table>
+    <script>
+        const { ipcRenderer } = require('electron');
+        window.onload = async () => {
+            const ctx = await ipcRenderer.invoke('obtener-contexto');
+            document.getElementById('nombre-sucursal').innerText = ctx.nombre_sucursal;
+            cargarCola(); setInterval(cargarCola, 10000); 
+        };
+        async function cargarCola() {
+            const res = await ipcRenderer.invoke('obtener-cola-impresion');
+            const tbody = document.getElementById('cola-impresion');
+            tbody.innerHTML = ''; 
+            if (res.success && res.data.length > 0) {
+                res.data.forEach(c => {
+                    tbody.innerHTML += `<tr><td><b>#${c.id_captura}</b></td><td style="color:#3b82f6; font-weight:bold;">${c.placa}</td><td>${c.marca} ${c.modelo}</td>
+                    <td><button onclick="alert('Programando formato para el Folio #${c.id_captura}')">🖨️ Imprimir</button></td></tr>`;
+                });
+            }
+        }
+    </script>
+</body>
+</html>

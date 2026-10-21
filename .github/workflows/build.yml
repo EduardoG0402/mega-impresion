@@ -1,0 +1,16 @@
+name: Build Print Module
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install
+      - env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run build -- --publish always
