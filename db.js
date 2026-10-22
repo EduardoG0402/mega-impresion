@@ -12,11 +12,9 @@ const config = {
     }
 };
 
-const ID_CENTRO_LOCAL = 1;
-
 const poolPromise = new sql.ConnectionPool(config)
     .connect()
     .then(pool => pool)
     .catch(err => { console.error('Error en BD: ', err); throw err; });
 
-module.exports = { sql, poolPromise, ID_CENTRO_LOCAL };
+module.exports = { sql, poolPromise };
