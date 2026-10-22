@@ -1,6 +1,6 @@
 {
   "name": "mega-impresion",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Módulo de Impresión - MEGA",
   "main": "src/main.js",
   "scripts": {
