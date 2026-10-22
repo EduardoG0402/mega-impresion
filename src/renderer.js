@@ -1,16 +1,18 @@
 const { ipcRenderer } = require('electron');
 
 window.onload = async () => {
-    // Traer el nombre del centro configurado
     const info = await ipcRenderer.invoke('obtener-info-centro');
     document.getElementById('badge-sucursal').innerText = `${info.nombre} | v${info.version}`;
     
-    // Cargar tabla inicial y programar refresco cada 10 seg
     cargarColaImpresion();
     setInterval(cargarColaImpresion, 10000); 
 };
 
 async function cargarColaImpresion() {
+    // Cambiamos el texto del botón temporalmente
+    const btnRefresh = document.getElementById('btn-refresh');
+    if(btnRefresh) btnRefresh.innerText = "⏳ Actualizando...";
+
     const resultado = await ipcRenderer.invoke('obtener-cola-impresion');
     const tbody = document.getElementById('cola-impresion');
     tbody.innerHTML = ''; 
@@ -36,6 +38,9 @@ async function cargarColaImpresion() {
     } else {
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No hay certificados pendientes en la cola.</td></tr>`;
     }
+
+    // Regresamos el botón a su texto original
+    if(btnRefresh) setTimeout(() => { btnRefresh.innerText = "🔄 Actualizar Tabla"; }, 500);
 }
 
 function abrirCertificado(id_captura) {

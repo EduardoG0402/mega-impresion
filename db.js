@@ -3,7 +3,7 @@ const sql = require('mssql');
 // 1. Credenciales de la Base de Datos
 const config = {
     user: 'sa',                   
-    password: 'Summar2026',   
+    password: 'Summa2026',   
     server: '192.168.100.30',      
     database: 'mega_verificentro_db',
     options: {
