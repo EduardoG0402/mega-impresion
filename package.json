@@ -1,6 +1,6 @@
 {
   "name": "mega-impresion",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Módulo de Impresión - MEGA",
   "main": "src/main.js",
   "scripts": {
@@ -28,12 +28,12 @@
   },
   "dependencies": {
     "dotenv": "^18.0.8",
-    "electron-updater": "^6.8.9",
+    "electron-updater": "^6.3.9",
     "getmac": "^6.6.0",
     "mssql": "^12.7.10"
   },
   "devDependencies": {
-    "electron": "^45.0.0",
-    "electron-builder": "^26.15.3"
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
   }
 }
