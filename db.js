@@ -1,26 +1,22 @@
 const sql = require('mssql');
 
-// Configuración del puente hacia SQL Server en tu Mac
+// 1. Credenciales de la Base de Datos
 const config = {
-    user: 'sa',                     // Tu usuario de SQL Server (usualmente es 'sa')
-    password: 'Summa2026',   // Tu contraseña de SQL Server
-    server: '192.168.100.33',       // La IP de tu Mac
+    user: 'sa',                   
+    password: 'Summar2026',   
+    server: '192.168.100.30',      
     database: 'mega_verificentro_db',
     options: {
-        encrypt: false,             // Falso para redes locales sin certificado SSL
-        trustServerCertificate: true // Fundamental para evitar errores de red local
+        encrypt: false,
+        trustServerCertificate: true
     }
 };
 
-// Creamos la conexión
+const ID_CENTRO_LOCAL = 1;
+
 const poolPromise = new sql.ConnectionPool(config)
     .connect()
-    .then(pool => {
-        console.log('✅ Conexión exitosa a la Base de Datos SQL Server (192.168.100.33)');
-        return pool;
-    })
-    .catch(err => {
-        console.error('❌ Error conectando a SQL Server:', err.message);
-    });
+    .then(pool => pool)
+    .catch(err => { console.error('Error en BD: ', err); throw err; });
 
-module.exports = { sql, poolPromise };
+module.exports = { sql, poolPromise, ID_CENTRO_LOCAL };
