@@ -8,14 +8,20 @@
 </head>
 <body>
 
+    <!-- CORTINA DE ACTUALIZACIÓN (Oculta por defecto) -->
+    <div id="update-overlay" class="overlay hidden">
+        <div class="spinner"></div>
+        <h2>🔄 Actualizando Sistema de Impresión...</h2>
+        <p>Descargando nueva versión en segundo plano.</p>
+        <p>Por favor espera, el sistema se reiniciará automáticamente.</p>
+    </div>
+
     <div class="header">
         <div class="title-container">
-            <h1>🖨️ Gestor de Impresión de Certificados</h1>
+            <img src="assets/logo.png" alt="MEGA Logo" class="logo">
+            <h1>Gestor de Impresión</h1>
         </div>
-        <div class="header-actions">
-            <button id="btn-refresh" class="btn-refresh" onclick="cargarColaImpresion()">🔄 Actualizar Tabla</button>
-            <div class="badge" id="badge-sucursal">Conectando...</div>
-        </div>
+        <div class="badge" id="badge-sucursal">Conectando...</div>
     </div>
 
     <div class="card">

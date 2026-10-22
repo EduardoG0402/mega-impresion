@@ -1,14 +1,20 @@
-* { box-sizing: border-box; }
-body { font-family: 'Segoe UI', 
-    Tahoma, Geneva, 
-    Verdana, sans-serif; 
+* { 
+    box-sizing: border-box; 
+}
+
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     background-color: #f1f5f9; 
     margin: 0; 
     padding: 20px; 
     color: #334155; 
 }
 
-.header { background-color: #1e293b; 
+/* ==========================================
+   CABECERA Y LOGO
+   ========================================== */
+.header { 
+    background-color: #1e293b; 
     color: white; 
     padding: 20px 25px; 
     border-radius: 8px; 
@@ -16,6 +22,17 @@ body { font-family: 'Segoe UI',
     justify-content: space-between; 
     align-items: center; 
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.title-container { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+.logo { 
+    height: 45px; 
+    object-fit: contain; 
 }
 
 .title-container h1 { 
@@ -33,6 +50,9 @@ body { font-family: 'Segoe UI',
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 }
 
+/* ==========================================
+   TABLA DE CAPTURAS
+   ========================================== */
 .card { 
     background-color: white; 
     border-radius: 8px; 
@@ -94,17 +114,36 @@ td {
     padding: 30px; 
 }
 
-.header-actions { display: flex; gap: 15px; align-items: center; }
-
-.btn-refresh { 
-    background-color: #334155; 
-    color: white; 
-    border: 1px solid #475569; 
-    padding: 8px 15px; 
-    border-radius: 6px; 
-    font-weight: 600; 
-    font-size: 13px; 
-    cursor: pointer; 
-    transition: all 0.2s ease; 
+.overlay {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.95); 
+    color: white;
+    z-index: 9999;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    text-align: center;
 }
-.btn-refresh:hover { background-color: #475569; border-color: #94a3b8; }
+
+.hidden { 
+    display: none !important; 
+}
+
+.spinner {
+    width: 60px; 
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #3b82f6; 
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 25px;
+}
+
+@keyframes spin { 
+    to { transform: rotate(360deg); } 
+}

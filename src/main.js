@@ -3,8 +3,11 @@ const path = require('path');
 const { autoUpdater } = require('electron-updater');
 const getmac = require('getmac'); 
 
-// Memoria dinámica que se llenará al leer la MAC
+const envPath = app.isPackaged ? path.join(path.dirname(process.execPath), '.env') : path.join(__dirname, '..', '.env');
+require('dotenv').config({ path: envPath });
+
 let centroActual = { id_centro: null, nombre_sucursal: "" };
+let revisionDeInicio = true; 
 
 ipcMain.handle('obtener-cola-impresion', async () => {
     try {
@@ -24,13 +27,14 @@ ipcMain.handle('obtener-cola-impresion', async () => {
 });
 
 ipcMain.handle('obtener-info-centro', () => {
-    // Mandamos el nombre que se detectó al arrancar
     return { nombre: centroActual.nombre_sucursal, version: app.getVersion() };
 });
 
 async function createWindow() { 
     const mainWindow = new BrowserWindow({ 
-        width: 1100, height: 700, title: "MEGA | Impresión", 
+        width: 1100, height: 700, 
+        title: "MEGA | Impresión", 
+        icon: path.join(__dirname, 'assets', 'logo.png'), // Logo de la ventana
         webPreferences: { nodeIntegration: true, contextIsolation: false } 
     });
     Menu.setApplicationMenu(null); 
@@ -41,18 +45,16 @@ async function createWindow() {
         const { sql, poolPromise } = require('../db.js');
         const pool = await poolPromise;
 
-        // Validamos a qué centro pertenece esta MAC
         const resultado = await pool.request()
             .input('mac', sql.VarChar, macActual)
             .query('SELECT * FROM verificentros WHERE mac_address = @mac AND estado_activo = 1');
 
         if (resultado.recordset.length > 0) {
-            // Guardamos los datos dinámicamente y abrimos la ventana
             centroActual.id_centro = resultado.recordset[0].id_centro;
             centroActual.nombre_sucursal = resultado.recordset[0].nombre_sucursal;
             mainWindow.loadFile(path.join(__dirname, 'index.html')); 
         } else {
-            dialog.showErrorBox('Equipo No Autorizado', 'Esta computadora (' + macActual + ') no está registrada en el sistema de captura principal.');
+            dialog.showErrorBox('Equipo No Autorizado', 'Esta computadora no está registrada para imprimir.');
             app.quit();
         }
     } catch (error) {
@@ -71,13 +73,40 @@ app.whenReady().then(() => {
         private: true,
         token: process.env.GH_TOKEN
     });
-    autoUpdater.checkForUpdatesAndNotify();
+
+    // 1. Revisión inicial
+    autoUpdater.checkForUpdates();
+
+    // 2. Revisión cada 15 minutos en segundo plano
+    setInterval(() => {
+        revisionDeInicio = false; 
+        autoUpdater.checkForUpdates();
+    }, 900000); 
 });
 
-// Eventos de Actualización
-autoUpdater.on('update-available', () => { dialog.showMessageBox({ type: 'info', title: 'Actualización Disponible', message: 'Descargando nueva versión en segundo plano...' }); });
-autoUpdater.on('update-not-available', () => { dialog.showMessageBox({ type: 'info', title: 'Sistema Actualizado', message: 'Tienes la versión más reciente del Gestor de Impresión.' }); });
-autoUpdater.on('update-downloaded', () => {
-    dialog.showMessageBox({ type: 'info', title: 'Actualización Lista', message: 'El sistema se reiniciará automáticamente para instalarla.' }).then(() => { autoUpdater.quitAndInstall(true, true); });
+// ==========================================
+// EVENTOS DE ACTUALIZACIÓN OTA
+// ==========================================
+autoUpdater.on('update-available', () => { 
+    BrowserWindow.getAllWindows().forEach(win => {
+        win.webContents.send('bloquear-pantalla-actualizacion');
+    });
 });
-autoUpdater.on('error', () => { dialog.showMessageBox({ type: 'error', title: 'Error', message: 'No se pudo buscar actualizaciones.' }); });
+
+autoUpdater.on('update-not-available', () => { 
+    if (revisionDeInicio) {
+        dialog.showMessageBox({ type: 'info', title: 'Mega Sistemas', message: 'Tienes la versión más reciente del Gestor de Impresión.' });
+        revisionDeInicio = false; 
+    }
+});
+
+autoUpdater.on('update-downloaded', () => {
+    autoUpdater.quitAndInstall(true, true);
+});
+
+autoUpdater.on('error', (err) => { 
+    if (revisionDeInicio) {
+        dialog.showErrorBox('Error del Actualizador', 'No se pudo verificar actualizaciones.');
+        revisionDeInicio = false;
+    }
+});
