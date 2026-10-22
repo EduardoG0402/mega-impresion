@@ -4,7 +4,7 @@ const sql = require('mssql');
 const config = {
     user: 'sa',                   
     password: 'Summa2026',   
-    server: '192.168.100.30',      
+    server: '192.168.100.33',      
     database: 'mega_verificentro_db',
     options: {
         encrypt: false,
